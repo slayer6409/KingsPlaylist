@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Loop</title>
+  <title>Happy Birthday!</title>
 
   <style>
     html, body {
@@ -15,21 +15,23 @@
       background: black;
     }
 
-    video {
+    iframe {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      object-fit: cover; /* fill screen, crop if needed */
+      border: none;
     }
   </style>
 </head>
 <body>
 
-  <video autoplay loop muted playsinline>
-    <source src="video.mp4" type="video/mp4">
-  </video>
+  <iframe
+    src="https://www.youtube.com/embed/GLu--zop0lc?autoplay=1&mute=1&loop=1&playlist=GLu--zop0lc&controls=0&modestbranding=1"
+    allow="autoplay; fullscreen"
+    allowfullscreen>
+  </iframe>
 
 </body>
 </html>
