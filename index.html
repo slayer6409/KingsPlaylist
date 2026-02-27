@@ -1,5 +1,7 @@
-<div id="player"></div>
-<button id="startButton">Click to Start</button>
+<div id="videoContainer">
+    <div id="player"></div>
+    <button id="startButton">Click to Start</button>
+</div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
@@ -38,7 +40,7 @@ function onPlayerStateChange(event) {
         if (currentIndex < playlist.length) {
             player.loadVideoById(playlist[currentIndex]);
         } else {
-            currentIndex = 0; // loop playlist
+            currentIndex = 0; // remove this if you don’t want looping
             player.loadVideoById(playlist[currentIndex]);
         }
     }
