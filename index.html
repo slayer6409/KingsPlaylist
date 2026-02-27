@@ -1,7 +1,46 @@
-<div id="videoContainer">
-    <video id="playlistVideo" width="100%" playsinline>
-        <source src="video1.mp4" type="video/mp4">
-    </video>
+<div id="player"></div>
+<button id="startButton">Click to Start</button>
 
-    <button id="startButton">Click to Start</button>
-</div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+let player;
+let currentIndex = 0;
+
+const playlist = [
+    "VIDEO_ID_1",
+    "VIDEO_ID_2"
+];
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '450',
+        width: '800',
+        videoId: playlist[currentIndex],
+        playerVars: {
+            controls: 1,
+            rel: 0
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+document.getElementById("startButton").addEventListener("click", () => {
+    document.getElementById("startButton").style.display = "none";
+    player.playVideo();
+});
+
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.ENDED) {
+        currentIndex++;
+
+        if (currentIndex < playlist.length) {
+            player.loadVideoById(playlist[currentIndex]);
+        } else {
+            currentIndex = 0; // loop playlist
+            player.loadVideoById(playlist[currentIndex]);
+        }
+    }
+}
+</script>
