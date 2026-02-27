@@ -1,49 +1,78 @@
-<script>
-let player = null;
-let playerReady = false;
-let startRequested = false;
-let currentIndex = 0;
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="index.css" />
+  <title>KingsPlaylist</title>
+</head>
 
-const playlist = ["0fCaU6bV3PI", "4tQfzIrmYZA"];
+<body>
+  <div id="videoContainer">
+    <div id="player"></div>
 
-const overlay = document.getElementById("startOverlay");
+    <div id="startOverlay">
+      <div id="startText">Click Anywhere to Start</div>
+    </div>
+  </div>
+  <script src="https://www.youtube.com/iframe_api"></script>
 
-function hideOverlayAndPlay() {
-  document.body.classList.add("started");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let player = null;
+      let playerReady = false;
+      let startRequested = false;
+      let currentIndex = 0;
 
-  overlay.style.opacity = "0";
-  setTimeout(() => {
-    overlay.style.display = "none";
-    player.playVideo();
-  }, 500);
-}
+      const playlist = ["0fCaU6bV3PI", "4tQfzIrmYZA"];
 
-overlay.addEventListener("click", () => {
-  startRequested = true;
+      const overlay = document.getElementById("startOverlay");
+      const startText = document.getElementById("startText");
 
-  if (playerReady && player) {
-    hideOverlayAndPlay();
-  }
-}, true);
+      function hideOverlayAndPlay() {
+        document.body.classList.add("started");
 
-window.onYouTubeIframeAPIReady = function () {
-  player = new YT.Player("player", {
-    height: "100%",
-    width: "100%",
-    videoId: playlist[currentIndex],
-    playerVars: { controls: 1, rel: 0, playsinline: 1 },
-    events: {
-      onReady: () => {
-        playerReady = true;
-        if (startRequested) hideOverlayAndPlay();
-      },
-      onStateChange: (event) => {
-        if (event.data === YT.PlayerState.ENDED) {
-          currentIndex = (currentIndex + 1) % playlist.length;
-          player.loadVideoById(playlist[currentIndex]);
-        }
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+          player.playVideo();
+        }, 500);
       }
-    }
-  });
-};
-</script>
+
+      overlay.addEventListener("click", () => {
+        startRequested = true;
+        startText.textContent = "Loading…";
+
+        if (playerReady && player) {
+          hideOverlayAndPlay();
+        }
+      }, true);
+      window.onYouTubeIframeAPIReady = function () {
+        player = new YT.Player("player", {
+          height: "100%",
+          width: "100%",
+          videoId: playlist[currentIndex],
+          playerVars: { controls: 1, rel: 0, playsinline: 1 },
+          events: {
+            onReady: () => {
+              playerReady = true;
+              startText.textContent = startRequested ? "Loading…" : "Click Anywhere to Start";
+              if (startRequested) hideOverlayAndPlay();
+            },
+            onStateChange: (event) => {
+              if (event.data === YT.PlayerState.ENDED) {
+                currentIndex = (currentIndex + 1) % playlist.length;
+                player.loadVideoById(playlist[currentIndex]);
+              }
+            },
+            onError: (e) => {
+              startText.textContent = "Video failed to load (embed disabled?)";
+              console.log("[YT] error code:", e.data);
+            }
+          }
+        });
+      };
+    });
+  </script>
+</body>
+</html>
